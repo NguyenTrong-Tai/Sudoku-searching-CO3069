@@ -37,6 +37,14 @@ class Board:
                     return False
         return True # valid
     
+    def find_empty_cell(self):
+        for row in range(9):
+            for col in range(9):
+                if self.grid[row][col].value == 0:
+                    return (row, col)
+        else:  None
+
+    #DRAW BOARD
     def color_text(self,text, color):
         COLORS = {
             "red": "\033[31m",
@@ -70,4 +78,4 @@ class Board:
         os.system('cls')
         self.grid[row][col].set_value(value)
         self.draw_grid(row,col)
-        time.sleep(0.05)
+        time.sleep(0.5)

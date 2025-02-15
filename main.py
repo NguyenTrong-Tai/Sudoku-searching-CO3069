@@ -23,24 +23,27 @@ def read_sudoku(filename):
 def main():
     # Ví dụ một bàn Sudoku 9x9 (0 đại diện cho ô trống)
     level = ("basic.txt","easy.txt","intermediate.txt","advance.txt","extreme.txt","evil.txt")
-    print("\nChọn level:\
+    while True:
+        print("\nChọn level:\
           1.Basic\
           2.Easy\
           3.intermediate\
           4.advance\
           5.extreme\
           6.evil")
-    inp = int(input())
-    if inp >6: return
+        inp = int(input())
+        if inp in range(1,6): 
+            break
+    
     file_input = f"input\{level[inp-1]}"
     init_board = read_sudoku(file_input)
-
-
-    print("\nChọn Giải thuật để giải bài toán sudoku:\
-          1.DFS\
-          2.BFS\
-          3.A*")
-    inp = int(input())
+    while True:
+        print("\nChọn Giải thuật để giải bài toán sudoku:\
+            1.DFS\
+            2.A*")
+        inp = int(input())
+        if inp in (1,2):
+            break            
     try:
         tracemalloc.start()
         start = time.time()
@@ -52,8 +55,8 @@ def main():
                 print("Giải thành công")
             else:
                 print("Không thành công")
-        else:
-            return
+        elif inp == 2:
+            return        
         
         # tính toán thời gian và bộ nhớ
         snapshot = tracemalloc.take_snapshot()
