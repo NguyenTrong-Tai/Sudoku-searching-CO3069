@@ -8,7 +8,6 @@ class Solver:
     def solve_dfs(self,drawFlag = False):
         empty_cell = self.board.find_empty_cell()
         if not empty_cell:
-            self.board.draw_grid()
             return True # Đã điền hết bảng
     
         row,col = empty_cell

@@ -34,12 +34,12 @@ def write_board_to_file(board, filename):
 
 def run():
     while True:
-        SIZE = {1:9, 2:12, 3:15}
+        SIZE = {1:9, 2:12, 3:16}
         while True:
             print("Vui lòng chọn kích thước: \
                     1. 9x9\
                     2. 12x12\
-                    3. 15x15")
+                    3. 16x16")
             size_board = int(input())
             if size_board in range(1,4):
                 size_board = SIZE[size_board]
@@ -72,7 +72,7 @@ def run():
             
 
         if mode == 1:
-            file_input = f"input/{level_files[inp - 1]}"
+            file_input = f"input/{level_names[inp - 1]}_{size_board}x{size_board}.txt"
             init_board = read_sudoku(file_input)
         else:
             init_board, _ = gen_input.generate_input(inp,size_board)
@@ -94,9 +94,9 @@ def run():
                 break
 
         try:
+            print("-------------------------------SOVLE---------------------------")
             tracemalloc.start()
             start = time.time()
-            print("-------------------------------SOVLE---------------------------")
             if algo == 1: # DFS
                 solver = Solver(board_obj)
                 if solver.solve_dfs(drawFlag=False):
@@ -156,8 +156,55 @@ def run():
 
         except Exception as e:
             print(f"Error: {e}")
+class TEMP:
+    def __init__(self,size,level,time,bonho) -> None:
+        self.size = size
+        self.level = level
+        self.time = time
+        self.bonho = bonho
+    def __str__(self) -> str:
+        return f"{self.size:<5}|   {self.level:<15}|   {self.time:.6f} s   |   {self.bonho:.6f} KB"
+def run_all():
+    SIZE = {1:9, 2:12, 3:16}
+    level_names = ("basic", "easy", "intermediate", "advance", "extreme", "evil")
+    DFS_temp = []
+    MRV_temp = []
+    for size in (9,12,16):
+        # if size == 12: break
+        for level in level_names:
+            file_input = f"input/{level}_{size}x{size}.txt"
+            init_board = read_sudoku(file_input)
+            board_obj = Board(init_board,size)
+            solve = Solver(board_obj)
+            for i in (1,2):
+                    
+                tracemalloc.start()
+                start = time.time()
+
+                solve.solve_dfs(False) if i ==1 else solve.solve_mrv(False)
+
+                snapshot = tracemalloc.take_snapshot()
+                top_stats = snapshot.statistics('lineno')
+                time_run = time.time() - start
+                memory_alloc = top_stats[0].size / 1024
+                DFS_temp.append(TEMP(size,level,time_run,memory_alloc)) if i ==1 else MRV_temp.append(TEMP(size,level,time_run,memory_alloc))
+    
+    print ("=============================DFS==========================")
+    print("size ----- level----------- Thời gian -------- Bộ nhớ----")
+    for ele in DFS_temp:
+        print(ele)
+
+
+    print()
+    print ("=============================MRV==========================")
+    print("size ----- level----------- Thời gian -------- Bộ nhớ----")
+    for ele in MRV_temp:
+        print(ele)
+                    
+
 
 def main():
     run()
 if __name__ == "__main__":
-    main()
+    # main()
+    run_all()

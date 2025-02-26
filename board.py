@@ -15,7 +15,8 @@ VALUE = {1:1,
         12:'C',
         13:'D',
         14:"E",
-        15:"F"}
+        15:"F",
+        16:"G"}
 class Cell:
     def __init__(self, value):
         self.value = value
@@ -44,8 +45,8 @@ class Board:
             self.box_height, self.box_width = 3, 3
         elif self.size_board == 12:
             self.box_height, self.box_width = 3, 4
-        elif self.size_board == 15:
-            self.box_height, self.box_width = 3, 5
+        elif self.size_board == 16:
+            self.box_height, self.box_width = 4, 4
     def is_valid_cell(self, row, col, value):
         # Kiểm tra hàng và cột
         for i in range(self.size_board):

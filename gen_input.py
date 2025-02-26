@@ -68,14 +68,14 @@ def generate_input(level,size):
         box_height, box_width = 3, 3
     elif size == 12:
         box_height, box_width = 3, 4
-    elif size == 15:
-        box_height, box_width = 3, 5
+    elif size == 16:
+        box_height, box_width = 4, 4
     else:
-        raise ValueError("Chỉ hỗ trợ Sudoku 12x12 hoặc 15x15")
+        raise ValueError("Chỉ hỗ trợ Sudoku 12x12 hoặc 16x16")
     level_names = {1: "basic", 2: "easy", 3: "intermediate",
                    4: "advance", 5: "extreme", 6: "evil"}
     puzzle, solution = generate_puzzle(level,size,box_height, box_width)
-    filename = f"input/{level_names.get(level, 'basic')}_gen.txt"
+    filename = f"input/{level_names.get(level, 'basic')}_{size}x{size}_gen.txt"
     with open(filename, "w") as f:
         for row in puzzle:
             line = " ".join(str(num) for num in row)
