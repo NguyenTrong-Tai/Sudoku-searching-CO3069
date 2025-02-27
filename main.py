@@ -22,13 +22,13 @@ def read_sudoku(filename):
     return sudoku
 
 
-def write_board_to_file(board, filename):
+def write_board_to_file(board,size, filename):
     """
     Ghi ma trận Sudoku (lấy giá trị từ các cell) vào file.
     """
     with open(filename, "w") as f:
-        for i in range(9):
-            line = " ".join(str(board[i][j].get_value()) for j in range(9))
+        for i in range(size):
+            line = " ".join(str(board[i][j].get_value()) for j in range(size))
             f.write(line + "\n")
 
 
@@ -165,18 +165,18 @@ class TEMP:
     def __str__(self) -> str:
         return f"{self.size:<5}|   {self.level:<15}|   {self.time:.6f} s   |   {self.bonho:.6f} KB"
 def run_all():
-    SIZE = {1:9, 2:12, 3:16}
     level_names = ("basic", "easy", "intermediate", "advance", "extreme", "evil")
     DFS_temp = []
     MRV_temp = []
     for size in (9,12,16):
-        # if size == 12: break
+        if size == 12: break
         for level in level_names:
-            file_input = f"input/{level}_{size}x{size}.txt"
-            init_board = read_sudoku(file_input)
-            board_obj = Board(init_board,size)
-            solve = Solver(board_obj)
             for i in (1,2):
+                # if i == 1: continue
+                file_input = f"input/{level}_{size}x{size}.txt"
+                init_board = read_sudoku(file_input)
+                board_obj = Board(init_board,size)
+                solve = Solver(board_obj)
                     
                 tracemalloc.start()
                 start = time.time()
@@ -188,7 +188,11 @@ def run_all():
                 time_run = time.time() - start
                 memory_alloc = top_stats[0].size / 1024
                 DFS_temp.append(TEMP(size,level,time_run,memory_alloc)) if i ==1 else MRV_temp.append(TEMP(size,level,time_run,memory_alloc))
-    
+                output_folder = "output"
+                if not os.path.exists(output_folder):
+                    os.makedirs(output_folder)
+                output_filename = os.path.join(output_folder, f"{level}_{size}x{size}_{i}.txt")
+                write_board_to_file(board_obj.grid, size, output_filename)
     print ("=============================DFS==========================")
     print("size ----- level----------- Thời gian -------- Bộ nhớ----")
     for ele in DFS_temp:
